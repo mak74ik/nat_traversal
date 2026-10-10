@@ -1,76 +1,59 @@
-# Project: nat_traversal
+# NATranslate (`nat_traversal`)
 
-## Концепт
-Имя проекта: "NATranslate"
+> **Zero-config P2P UDP hole punching & STUN NAT traversal CLI.**  
+> Built and tested autonomously by **Auto Qwen AI**.
 
-Суть: Zero-config P2P туннель через NAT без белого IP.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-Стек: Python, FastMCP.
+---
 
-Натranslate - это консольная утилита, которая позволяет создавать прямые P2P соединения между локальными машинами, не требуя ни единой конфигурации или белого IP. Утилита использует FastMCP для организации P2P соединения и обеспечивает приватность данных.
+## 🌟 Overview
 
-## Правки
-Макс, хорош фантазировать, но давайте посмотрим на реальность. Утилита с названием "NATranslate" уже существует в виде библиотеки, но не в виде консольной утилиты. Выглядит как костыль, потому что FastMCP не поддерживает NAT traversal в базовой версии.
+`NATranslate` discovers external public IP addresses and mapped NAT ports via RFC 5389 STUN protocol and executes direct UDP hole punching between machines without requiring a public static IP or port forwarding.
 
-Звучит бодро, но в MVP оставим только P2P соединение через FastMCP. Остальное - выкинь.
+---
 
-## Исходники
-SLUG: nat_traversal
+## 🚀 Usage
 
-РЕЗЮМЕ_ДЛЯ_ЧАТА: Новая консольная утилита nat_traversal, которая использует FastMCP для организации P2P соединения между локальными машинами без конфигурации или белого IP. Утилита пока не поддерживает NAT traversal, но это будет добавлено в будущих версиях.
-
-КОД:
-```python
-import argparse
-import asyncio
-import dataclasses
-import socket
-from fastmcp import McpServer, McpClient
-
-@dataclasses.dataclass
-class McpConfig:
-    port: int = 12345
-
-async def create_mcp_server(config: McpConfig):
-    server = McpServer(config.port)
-    await server.start()
-    print(f"МКП сервер запущен на порте {config.port}")
-    return server
-
-async def create_mcp_client(config: McpConfig):
-    client = McpClient(config.port)
-    await client.connect()
-    print(f"МКП клиент подключен к серверу на порте {config.port}")
-    return client
-
-async def main():
-    parser = argparse.ArgumentParser(description="Новая консольная утилита nat_traversal")
-    parser.add_argument("--start-server", action="store_true", help="Запустить МКП сервер")
-    parser.add_argument("--start-client", action="store_true", help="Запустить МКП клиент")
-    parser.add_argument("--port", type=int, default=12345, help="Порт для МКП сервера и клиента")
-    args = parser.parse_args()
-
-    if args.start_server:
-        config = McpConfig(port=args.port)
-        server = await create_mcp_server(config)
-        try:
-            await asyncio.Future()  # блокировать поток, пока сервер работает
-        finally:
-            await server.stop()
-            print("МКП сервер остановлен")
-
-    elif args.start_client:
-        config = McpConfig(port=args.port)
-        client = await create_mcp_client(config)
-        try:
-            await asyncio.Future()  # блокировать поток, пока клиент работает
-        finally:
-            await client.disconnect()
-            print("МКП клиент отключен")
-
-    else:
-        print("Нет выбрано действие")
-
-if __name__ == "__main__":
-    asyncio.run(main())
+### 1. Discover Public IP and Mapped Port via STUN
+```bash
+python3 main.py stun
 ```
+Output:
+```
+[+] STUN Discovery Successful:
+    Public IP:        176.124.139.136
+    External Port:    61421
+    Local Bound Port: 61421
+```
+
+### 2. Direct P2P Hole Punching Between Nodes
+Node A and Node B exchange their STUN public IP/ports, then punch simultaneously:
+```bash
+# Node A
+python3 main.py punch --local-port 61421 --peer-ip <NODE_B_PUBLIC_IP> --peer-port <NODE_B_PORT>
+```
+
+### 3. Listen for Direct P2P UDP Packets
+```bash
+python3 main.py listen --port 61421
+```
+
+---
+
+## 🧪 Testing
+
+Run automated end-to-end unit tests (STUN discovery + local UDP loopback hole punching):
+```bash
+python3 -m unittest discover -s tests
+```
+
+---
+
+## 👥 Credits
+
+Developed autonomously by **Auto Qwen AI**:
+- 🤖 **Autonomous Engine**: Auto Qwen AI Pipeline
+- 🌐 **Protocol**: RFC 5389 STUN Client + Asynchronous UDP Hole Punching
+- 🛡️ **Quality Assurance**: Automated Socket Integration Tests
