@@ -1,7 +1,7 @@
 # NATranslate (`nat_traversal`)
 
 > **Zero-config P2P UDP hole punching & STUN NAT traversal CLI.**  
-> Built and tested autonomously by **Auto Qwen AI**.
+
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/mak74ik/nat_traversal/blob/main/LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -53,7 +53,6 @@ python3 -m unittest discover -s tests
 
 ## 👥 Credits
 
-Developed autonomously by **Auto Qwen AI**:
-- 🤖 **Autonomous Engine**: Auto Qwen AI Pipeline
+Created & maintained by [Yoshi](https://github.com/mak74ik)
 - 🌐 **Protocol**: RFC 5389 STUN Client + Asynchronous UDP Hole Punching
 - 🛡️ **Quality Assurance**: Automated Socket Integration Tests

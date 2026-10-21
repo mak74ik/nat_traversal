@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 NATranslate (nat_traversal): Zero-config P2P UDP hole punching & STUN NAT traversal CLI.
-Built autonomously by Auto Qwen AI.
+Built autonomously by Yoshi.
 """
 
 import argparse
